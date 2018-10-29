@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500')
+@import "config"
+@import "icon"
+@import "button"
+@import "input"
+@import "form"
+@import "slideover"
+
+*
+  box-sizing border-box
+
+html
+body
+  height 100%
+
+body
+  font-family 'Roboto', sans-serif
+  font-weight 300
+  display flex
+  flex-direction column
+  padding 0
+  margin 0
+
+strong
+  font-weight 500
+
+#app
+  flex 1 0 auto
+
+.icon
+  font-size 75%
+
+.footer
+  max-width body-max-width
+  text-align right
+  height 30px
+  flex 0 0 auti
+  font-size font-size-small
+  & > *
+    margin-left 5px
+
+.pane
+  margin-bottom 20px

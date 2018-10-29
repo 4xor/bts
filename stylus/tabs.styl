@@ -1,0 +1,33 @@
+.tabs
+  &__header
+    margin-bottom 12px
+    
+    &__tab
+      font-size font-size-small
+      line-height 16px
+      cursor pointer
+      display inline-block
+      height 24px
+      padding 0 0 0 24px
+      position relative
+      text-transform none
+      margin-right 7px
+
+      &:hover
+        color color-blue
+
+      &.selected:after
+        background color-blue
+        bottom 0
+        content ""
+        display block
+        height 2px
+        left 24px
+        position absolute
+        right 0
+
+  &__content
+    display none
+
+    &-selected
+      display block

@@ -1,0 +1,16 @@
+.slideover
+  position fixed
+  top 0
+  width 60%
+  height 100%
+  background-color white
+  padding 20px
+  box-shadow -4px 1px 9px 0px rgba(0,0,0,0.23)
+  transition: right 0.3s ease;
+
+  &-show
+    right 0
+    animation-duration 1s
+  &-hide
+    right -60%
+    animation-duration 1s

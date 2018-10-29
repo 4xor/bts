@@ -1,0 +1,66 @@
+button 
+  background-repeat no-repeat
+  border 1px solid transparent
+  border-radius 2px
+  color rgba(0,0,0,.987)
+  cursor pointer
+  display inline-block
+  font-size font-size-small
+  font-weight 400
+  height 24px
+  line-height 22px
+  margin 0
+  padding 0 10px 0 10px
+  text-align center
+  position relative
+  text-decoration none
+  text-transform none
+  white-space nowrap
+  vertical-align middle
+
+  &:focus
+    outline 0
+
+  &[disabled]
+    box-shadow none!important
+    background #fafafa!important
+    color rgba(0,0,0,.654)!important
+    cursor default
+    opacity .6
+
+  &.standard
+    background-color #fff
+    background-image linear-gradient(top,rgba(0,0,0,0),rgba(0,0,0,0.02))
+    border-color #d3d3d3
+
+    &:hover
+      border-color #ccc
+      box-shadow 0 1px 3px rgba(0,0,0,0.2)
+
+    &:focus
+      border-color #3367d6
+
+  &.primary
+    background-color #3367d6
+    background-image linear-gradient(top,rgba(0,0,0,0),rgba(0,0,0,0.05))
+    border-color #0d55cb
+    color #fff
+    min-width 34px
+
+    &:hover
+      border-color #0b47aa
+      box-shadow 0 1px 3px rgba(0,0,0,0.35)
+
+    &:focus
+      border-color #0161fd
+      box-shadow: inset 0 0 0 1px #fff
+
+    &[disabled]
+      border-color #0d55cb!important
+      background #3367d6!important
+      color #fff!important
+      cursor default
+      opacity .6
+
+
+

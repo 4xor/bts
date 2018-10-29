@@ -1,0 +1,67 @@
+@import "../shared"
+
+#app
+  padding 8px
+
+.search
+  max-width: 1000px
+
+  & .q
+    margin-left 10px
+    flex auto
+
+  & .field-set
+    display flex
+    justify-content center
+
+  & button[type=submit]
+    margin-left 10px
+    padding-right 20px
+
+.search-result
+  margin-top 20px
+  max-width 1000px
+  width 100%
+  a
+    text-decoration none
+    color black
+    &:hover
+      color #171161
+  .sl
+    font-size 12px
+    color gray
+  .link
+    float right
+  .tags
+    & > *
+      display inline-block
+      margin-right 3px
+      margin-top 3px
+  .search-item
+    margin-bottom 4px
+    padding 3px
+  .loading
+    text-align center
+    margin-top 20px
+.search-result .tags .tag,
+.search-result .tags .tag a
+  padding 0 1px
+  font-size 12px
+  color gray
+  cursor pointer
+.search-item
+  &:hover
+    background-color rgba(0, 0, 0, 0.04)
+  .size
+    width 60px
+    display inline-block
+    text-align right
+.search-footer
+  text-align center
+  margin-top 20px
+  & > *
+    display inline-block
+  .load-count
+    float right
+    font-size 10px
+    color silver
