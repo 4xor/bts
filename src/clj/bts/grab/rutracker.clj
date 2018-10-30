@@ -18,7 +18,7 @@
   (last (re-find #"Перевод[^:]*:\s*([^:]*)\s[^:]*:" body)))
 
 (defn- decode-video [body]
-  (let [[_ w h] (re-find #"Видео:.*\s(\d+)x(\d+)\s" body)
+  (let [[_ w h] (re-find #"Видео:.*\s(\d{4}|\d{3}|\d{2})x(\d{4}|\d{3}|d{2})\s" body)
         [_ q] (re-find #"(?:Качество|Тип релиза)[^:]*:\s*([^\s]*)\s" body)]
     (if (and (nil? q) (nil? w) (nil? h))
       nil
