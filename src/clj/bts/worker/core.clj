@@ -21,7 +21,7 @@
                     (let [id (:id task)
                           params (json/parse-string (:params task) true)
                           res (f id params)]
-                      (log/debug "Start execute task [" task-type "][" id "] with " params)
+                      (log/info "Start execute task [" task-type "][" id "] with " params)
                       (complete-task db {:id id :result (json/generate-string res)}))
                     (Thread/sleep 500))
                   (catch Exception e (log/error e "Exception on task worker"))))))

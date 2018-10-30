@@ -117,7 +117,11 @@
           [:span "Action name"]
           [:p "Available actions: " [:br]
            [:strong "rutracker-forum-parse-film"]
-           " - parse film type rutracker forum page for collect topics for store"]
+           " - parse film type rutracker forum page for collect topics for store" [:br]
+           [:strong "cleanup"]
+           "- clean system temp data" [:br]
+           [:strong "torrent-seed-leach-update"]
+           "- update torrent seeder/leeder information"]
           [input {:placeholder "rutracker-forum-parse-film"
                   :model       model
                   :id          :action-name
@@ -187,10 +191,10 @@
           [:span "Action name"]
           [:p "Available actions: " [:br]
            [:strong "rutracker-forum-parse-film"]
-           " - parse film type rutracker forum page for collect topics for store"
+           " - parse film type rutracker forum page for collect topics for store" [:br]
            [:strong "cleanup"]
-           "- clean system temp data"
-           [:string "torrent-seed-leach-update"]
+           "- clean system temp data" [:br]
+           [:strong "torrent-seed-leach-update"]
            "- update torrent seeder/leeder information"]
           [input {:placeholder "rutracker-forum-parse-film"
                   :model       model

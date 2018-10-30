@@ -80,13 +80,13 @@
                   (tag-kp t)
                   (tag-raiting-kp raiting)
                   (tag-raiting-imdb raiting))]
-    {:source "rutracker"
-     :source_id id
+    {:source       "rutracker"
+     :source_id    id
      :torrent_type 1
-     :magnet (:magnet t)
-     :size (:size t)
-     :name name
-     :tags (into [] tags)}))
+     :magnet       (:magnet t)
+     :size         (:size t)
+     :name         name
+     :tags         (into [] tags)}))
 
 (defn- task-topic-parse-video [db id]
   (let [to-store (parse-video-topic id)]
@@ -97,7 +97,11 @@
     (try (cond
            (= torrent-type "film") (task-topic-parse-video db id)
            :else (throw (Exception. "unsupported torrent type")))
-         (catch Throwable ex (log/error ex "Parse topic exception " id) {:error (.getMessage ex)}))))
+         (catch Throwable ex
+           (register-failed-topic db {:source    "rutracker"
+                                      :source_id id
+                                      :error     (utils/exception->string ex)})
+           (log/error ex "Parse topic exception " id) {:error (.getMessage ex)}))))
 
 (defn start-topic-worker
   "Start worker witch will parse topics torrent data"

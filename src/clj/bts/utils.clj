@@ -1,6 +1,7 @@
 (ns bts.utils
   (:require [clojure.walk :as walk]
-            [clojure.string :as str]))
+            [clojure.string :as str])
+  (:import (java.io StringWriter PrintWriter)))
 
 (defn round
   [d precision]
@@ -32,3 +33,10 @@
    :headers {}
    :body    (transform-keys decode-key body)})
 
+
+(defn exception->string [ex]
+  (let [sw (StringWriter.)]
+    (.write sw (.getMessage ex))
+    (.write sw "\n")
+    (.printStackTrace ex (PrintWriter. sw))
+    (.toString sw)))

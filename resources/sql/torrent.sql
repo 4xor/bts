@@ -1,6 +1,7 @@
 -- :name torrent-exists :? :1
 -- :doc Check torrent exists in db
-select exists(select 1 from torrent where source = :source and source_id = :source_id) as r
+select (exists(select 1 from torrent where source = :source and source_id = :source_id) OR
+        exists(select 1 from topic_failed where source = :source and source_id = :source_id)) as r
 
 
 -- :name torrent-insert :! :n
@@ -31,4 +32,7 @@ where
    limit 100
  )
  returning id, source, source_id;
- 
+
+-- :name register-failed-topic :! :n
+insert into topic_failed(source, source_id, error_message)
+values(:source, :source_id, :error)

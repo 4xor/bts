@@ -25,11 +25,11 @@
               params (edn/read-string (get m "params"))
               name (get m "name")
               db (get m "db")]
-          (log/debug "Start job" action "(" params ")")
+          (log/info "Start job" action "(" params ")")
           (start-execute-job db {:name name})
           (let [ret (schedulers/execute-schedule-action db action params)
                 status (if (nil? (:error ret)) "idle" "error")]
-            (if (= status "idle") (log/debug "Job complete" action "(" params ") - " ret)
+            (if (= status "idle") (log/info "Job complete" action "(" params ") - " ret)
                                   (log/error "Job complete" action "(" params ") - " ret))
             (complete-execute-job db {:name name :result (json/generate-string ret) :status status}))))
 
