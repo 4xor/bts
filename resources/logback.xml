@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuration scan="true" scanPeriod="1 minute">
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d %-5level %logger{5} - %msg%n</pattern>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="bts.GCPCloudLoggingJSONLayout">
+                <pattern>%-4relative [%thread] %-5level %logger{35} - %msg</pattern>
+            </layout>
         </encoder>
     </appender>
 
-    <logger name="bts" level="INFO" additivity="false">
+    <logger name="bts" level="DEBUG" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <root level="ERROR">
+    <root level="INFO">
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>

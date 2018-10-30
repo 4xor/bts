@@ -1,0 +1,67 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: bts-worker
+  labels:
+    app: bts-worker
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: bts-worker
+    spec:
+      containers:
+        - name: bts-worker
+          image: 4xor/bts:nightly
+          imagePullPolicy: Always
+          env:
+            - name: COUNT_TOPIC_WORKERS
+              value: "3"
+            - name: ENABLE_SCHEDULER
+              value: "false"
+            - name: RDS_DB_NAME
+              value: "bts"
+            - name: RDS_HOSTNAME
+              value: "127.0.0.1"
+            - name: RDS_PORT
+              value: "5432"
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bts
+                  key: adminpassword
+            # [START cloudsql_secrets]
+            - name: RDS_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: username
+            - name: RDS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: password
+            # [END cloudsql_secrets]
+        # [START proxy_container]
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.11
+          command: ["/cloud_sql_proxy",
+                    "-instances=bts4xor:europe-west2:production=tcp:5432",
+                    "-credential_file=/secrets/cloudsql/credentials.json"]
+          # [START cloudsql_security_context]
+          securityContext:
+            runAsUser: 2  # non-root user
+            allowPrivilegeEscalation: false
+          # [END cloudsql_security_context]
+          volumeMounts:
+            - name: cloudsql-instance-credentials
+              mountPath: /secrets/cloudsql
+              readOnly: true
+        # [END proxy_container]
+      # [START volumes]
+      volumes:
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
+      # [END volumes]

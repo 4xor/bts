@@ -1,0 +1,97 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: bts-web
+  labels:
+    app: bts-web
+spec:
+  template:
+    metadata:
+      labels:
+        app: bts-web
+    spec:
+      containers:
+        - name: bts-web
+          image: 4xor/bts:nightly
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              hostPort: 8080
+          env:
+            - name: HOST
+              value: 0.0.0.0
+            - name: COUNT_TOPIC_WORKERS
+              value: "0"
+            - name: ENABLE_SCHEDULER
+              value: "true"
+            - name: RDS_DB_NAME
+              value: "bts"
+            - name: RDS_HOSTNAME
+              value: "127.0.0.1"
+            - name: RDS_PORT
+              value: "5432"
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bts
+                  key: adminpassword
+            # [START cloudsql_secrets]
+            - name: RDS_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: username
+            - name: RDS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: password
+            # [END cloudsql_secrets]
+        # [START proxy_container]
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.11
+          command: ["/cloud_sql_proxy",
+                    "-instances=bts4xor:europe-west2:production=tcp:5432",
+                    "-credential_file=/secrets/cloudsql/credentials.json"]
+          # [START cloudsql_security_context]
+          securityContext:
+            runAsUser: 2  # non-root user
+            allowPrivilegeEscalation: false
+          # [END cloudsql_security_context]
+          volumeMounts:
+            - name: cloudsql-instance-credentials
+              mountPath: /secrets/cloudsql
+              readOnly: true
+        # [END proxy_container]
+      # [START volumes]
+      volumes:
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
+      # [END volumes]
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "bts-web-service"
+  namespace: "default"
+  labels:
+    app: "bts-web"
+spec:
+  ports:
+    - protocol: "TCP"
+      port: 8080
+  selector:
+    app: "bts-web"
+  type: "NodePort"
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: main-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "web-static-ip"
+spec:
+  backend:
+    serviceName: bts-web-service
+    servicePort: 8080
