@@ -11,7 +11,7 @@
         cls (atom [])
         on-change (fn [v] (do
                             (swap! model assoc id v)
-                            (when validator (let [ret (validator v)]
+                            (when validator (let [ret (true? (validator v))]
                                               (swap! model assoc-in [:_validate id] ret)
                                               (if ret (reset! cls []) (reset! cls [vc]))))))]
     (fn []

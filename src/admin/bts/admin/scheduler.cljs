@@ -2,7 +2,7 @@
   (:use-macros [cljs.core.async.macros :only [go]])
   (:require [bts.admin.index :refer [layout]]
             [cljs.core.async :refer [<! timeout]]
-            [cljs-http.client :as http]
+            [clojure.string :as string]
             [cljs-time.format :as tf]
             [cljs-time.core :as t]
             [reagent.core :as r]
@@ -16,6 +16,10 @@
     (= s "work") [:i.icon-spin4.animate-spin]
     (= s "error") [:i.icon-attention]
     :else s))
+
+(defn check-cron [s]
+  (let [parts (string/split s #"\s")]
+    (= (count parts) 7)))
 
 (defn- format-time [s]
   (if (nil? s) ""
@@ -145,7 +149,7 @@
                   :id          :cron
                   :field       :text
                   :disabled    saving
-                  :validator   :not-blank}]]]
+                  :validator   check-cron}]]]
         [:div.form__footer
          [:button.standard {:type "button" :disabled @saving :on-click #(reset! show false)} "cancel"]
          [:button.primary {:type "submit" :disabled @saving} (if @saving [:span [:i.icon-spin4.animate-spin] "saving"] "save")]]]])))
@@ -219,7 +223,7 @@
                   :id          :cron
                   :field       :text
                   :disabled    saving
-                  :validator   :not-blank}]]]
+                  :validator   check-cron}]]]
         [:div.form__footer
          [:button.standard {:type "button" :disabled @saving :on-click #(reset! show false)} "cancel"]
          [:button.primary {:type "submit" :disabled @saving} (if @saving [:span [:i.icon-spin4.animate-spin] "saving"] "save")]]]])))
