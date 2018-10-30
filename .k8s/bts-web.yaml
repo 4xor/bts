@@ -95,3 +95,7 @@ spec:
   backend:
     serviceName: bts-web-service
     servicePort: 8080
+  tls:
+  - secretName: bts-dot-4xor-dot-tls
+    hosts:
+    - bts.4xor.io

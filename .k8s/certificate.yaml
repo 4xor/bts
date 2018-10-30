@@ -1,0 +1,19 @@
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: bts-dot-4xor-dot-tls
+  namespace: default
+spec:
+  secretName: bts-dot-4xor-dot-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: bts.4xor.io
+  dnsNames:
+  - bts.4xor.io
+  acme:
+    config:
+    - http01:
+        ingress: main-ingress
+      domains:
+      - bts.4xor.io
