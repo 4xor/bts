@@ -47,7 +47,8 @@
   :source-paths ["src/clj"]
   :resource-paths ["resources"]
   :profiles {:uberjar {:source-paths ["src/clj"]
-                       :prep-tasks   ["compile"
+                       :prep-tasks   ["clean"
+                                      "compile"
                                       ["cljsbuild" "once" "min"]
                                       ["cljsbuild" "once" "admin-min"]]
                        :hooks        []
@@ -97,4 +98,5 @@
   :figwheel {:css-dirs     ["resources/public/css"]
              :nrepl-port   7888
              :nrepl-host   "localhost"
-             :ring-handler bts.web/handler})
+             :ring-handler bts.web/handler}
+  :aliases {"docker-publish" ["run" "-m" "docker.core" "4xor/bts" :project/version]})
