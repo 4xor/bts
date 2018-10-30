@@ -20,7 +20,6 @@
 (def ^:private admin-password (env :admin-password "dev"))
 
 (defn authenticated? [username password]
-  (println username password)
   (true? (and (= username "admin") (= password admin-password))))
 
 (defn try-as-int [p default]
