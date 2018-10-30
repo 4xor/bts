@@ -31,12 +31,12 @@
 (defn- decode-size [text]
   (if (nil? text)
     nil
-    (let [[_ d s] (re-find #"(\d+(?:\.\d+)?)\s([G|M]B)" text)
-          dn (Float/parseFloat d)]
-      (cond
-        (= s "GB") (* dn 1000000000)
-        (= s "MB") (* dn 1000000)
-        :else (* dn 1000)))))
+    (if-let [[_ d s] (re-find #"(\d+(?:\.\d+)?)\s([G|M]B)" text)]
+      (let [dn (Float/parseFloat d)]
+        (cond
+          (= s "GB") (* dn 1000000000)
+          (= s "MB") (* dn 1000000)
+          :else (* dn 1000))))))
 
 (defn- decode-kp-link [l]
   (let [[_ a b] (re-find #"kinopoisk.*\/(?:film\/(\d+)|(\d+)\.gif)" l)] (or a b nil)))
