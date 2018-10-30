@@ -1,0 +1,13 @@
+sudo: required
+language: clojure
+jdk: oraclejdk8
+services:
+- docker
+deploy:
+  provider: script
+  script: lein docker-publish
+  on:
+    all_branches: true
+env:
+  global:
+    secure: VPuK3Z+nc6nWDyy/naTlbzL6/rJTXjO59+DO8+GvX3tzqmRUX5wzPwZqsYoa9E3ZfDcQ4UbnIvbgQ0nS0j2slYLuuzBpNgKbXIgGf26mJIX+RRAByflXYz/SBZ36Sr9hnsmcyDFHhAaqXLgtzSOM57a7EgWfmf/zY0hg/jyTERLTrG5hquuINDvnsT2U0xTPzJR8VQq72elwkV4bkZO45NrhmtBDs1eQiYyvlufX08XdpkV5tpaVFJPa3EYeT6/eO7T9MdYOm+1BZSf1uJdAcCd/bcL5af47fP2v7M19sxdEX1A57TEbVA4asGsnncDb1nDrv7A0KGav8hiEIEukYuXODPcbfMrYXPmu+mBgZRck3m3WhQg3119YHCb1qWwO/KHgWF0lYchQ+mdsuK2EBV08Z7+AaYD8NAprNn1zaobweTBqE9If9AjZ6+1GCqmCCVi9VCcA2/2ZyhftmS+0V0tAMkOd3+XK7JSnumfHCxpzgr5x2j//vinTdplNu0SzzqfgpSGc0O1KeTRyYrBgXm1pFNw3ywoIKOvWQ9evafTlRcsFFmIHTkjoB9192w6dNKcltwLwEuIyl2aivgnRyXQR+YIaCmZyBtT1Ker6r+e4AliG8lRIIsKQioqQ4EIFtactz1I0fk6MvNAbIE31bJj6IcHzI0LnfOV6OoC9P34=
