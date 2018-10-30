@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: bts-worker
-          image: 4xor/bts:0.1.0
+          image: 4xor/bts:nightly
           imagePullPolicy: Always
           env:
             - name: COUNT_TOPIC_WORKERS

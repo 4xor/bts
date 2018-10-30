@@ -7,6 +7,7 @@
 (defn execute-schedule-action [db action params]
   (try (cond
          (= action "rutracker-forum-parse-film") (bts.components.schedulers.rutracker-parser/parse-forum-topic db (:id params) :film)
+         (= action "rutracker-forum-parse-tv-series") (bts.components.schedulers.rutracker-parser/parse-forum-topic db (:id params) :tv-series)
          (= action "torrent-seed-leach-update") (bts.components.schedulers.torrent-sl-update/update-sl-info db)
          (= action "cleanup") (bts.components.schedulers.cleanup/clean-up db)
          :else {:error "Action not found"})

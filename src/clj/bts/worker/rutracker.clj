@@ -18,6 +18,13 @@
 
 (defn- tag-translate [t acc]
   (if-not (nil? t) (conj acc (cond
+                               (= t :lostfilm) "lostfilm"
+                               (= t :jaskier) "jaskier"
+                               (= t :newstudio) "newstudio"
+                               (= t :amedia) "amedia"
+                               (= t :alexfilm) "alexfilm"
+                               (= t :kuraj-bombey) "kuraj-bambey"
+                               (= t :k3) "k3"
                                (= t :pro) "pro-voice"
                                (= t :itunes) "itunes-voice"
                                (= t :multivoice) "multi-voice"
@@ -69,6 +76,16 @@
       (concat acc (distinct keys)))
     acc))
 
+(defn- tag-season [{f :from t :to} acc]
+  (if-not (or (nil? f) (nil? t))
+    (concat acc [(str "s:" f ".." t) (str "s" f)] (map #(str "s" (inc %)) (range f t)))
+    acc))
+
+(defn- tag-series [{f :from t :to} acc]
+  (if-not (or (nil? f) (nil? t))
+    (concat acc [(str "series:" f ".." t) (str "x" f)] (map #(str "x" (inc %)) (range f t)))
+    acc))
+
 (defn- parse-video-topic [id]
   (let [t (gr/decode-topic (gr/topic id))
         name (topic-name (:title t))
@@ -88,8 +105,29 @@
      :name         name
      :tags         (into [] tags)}))
 
-(defn- task-topic-parse-video [db id]
-  (let [to-store (parse-video-topic id)]
+(defn- parse-tv-series-topic [id]
+  (let [t (gr/decode-topic-tv-series (gr/topic id))
+        name (topic-name (:title t))
+        raiting (if-not (nil? (:kp-id t)) (kp/get-raiting (:kp-id t)) nil)
+        tags (->> []
+                  (tag-translate (tc/translate (:translate t)))
+                  (tag-video-quality (tc/video-quality (get-in t [:video :quality])))
+                  (tag-video-size t)
+                  (tag-kp t)
+                  (tag-raiting-kp raiting)
+                  (tag-raiting-imdb raiting)
+                  (tag-season (:season t))
+                  (tag-series (:series t)))]
+    {:source       "rutracker"
+     :source_id    id
+     :torrent_type 2
+     :magnet       (:magnet t)
+     :size         (:size t)
+     :name         name
+     :tags         (into [] tags)}))
+
+(defn- task-topic-parse-video [db id f]
+  (let [to-store (f id)]
     (if-not (nil? (:magnet to-store))
       (torrent-insert db to-store)
       (register-failed-topic db {:source    "rutracker"
@@ -99,7 +137,8 @@
 (defn- task-topic-parse [db]
   (fn [_ {id :id torrent-type :type}]
     (try (cond
-           (= torrent-type "film") (task-topic-parse-video db id)
+           (= torrent-type "film") (task-topic-parse-video db id parse-video-topic)
+           (= torrent-type "tv-series") (task-topic-parse-video db id parse-tv-series-topic)
            :else (throw (Exception. "unsupported torrent type")))
          (catch Throwable ex
            (register-failed-topic db {:source    "rutracker"

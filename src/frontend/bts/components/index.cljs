@@ -47,7 +47,11 @@
 (defn tags-parse [tags]
   (let [kpid (first (filter #(string/starts-with? % "kpid:") tags))
         kp (first (filter #(string/starts-with? % "kp:") tags))
-        view (filter (fn [e] (not (or (string/starts-with? e "kpid:") (string/starts-with? e "kp:") (string/starts-with? e "imdb:")))) tags)]
+        view (filter (fn [e] (not (or (string/starts-with? e "kpid:")
+                                      (string/starts-with? e "kp:")
+                                      (string/starts-with? e "imdb:")
+                                      (re-matches #"s\d+" e)
+                                      (re-matches #"x\d+" e)))) tags)]
     {:all tags
      :kp {:id (tag-value kpid) :value kp}
      :view view}))
@@ -56,7 +60,7 @@
   (let [{tags :view kp :kp} (tags-parse (:tags item))]
     [:div.search-item {:key (:id item)}
      [:div.name
-      [:a.name {:href (str "http://rutracker.org/forum/viewtopic.php?t=" (:source_id item)) :target "_blank"} (:name item)]
+      [:span.name (:name item)]
       [:a.link {:href (:magnet item)} [:span.sl "[S:" (:seeders item) " L:" (:leechers item) "] "] [:span.size (clojure.contrib.humanize/filesize (:size item))] [:i.icon.icon-magnet]]]
      [:div.tags
       (for [tag tags]

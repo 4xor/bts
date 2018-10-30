@@ -84,3 +84,31 @@
        :video     (decode-video (:text body))
        :size      (decode-size (:text size-el))
        :kp-id     kp-id})))
+
+(defn- decode-tv-series-info-from-title [page-title]
+  (let [sp (string/split page-title #"/")
+        [_ season-f season-t] (re-find #"сезон[^\d]*(?::)?\s*(\d+)(?:-(\d+))?" (string/lower-case page-title))
+        [_ f t] (re-find #"(?:сери|эпизод)[^\d]*(?::)?\s*(\d+)(?:-(\d+))?" (string/lower-case page-title))]
+    {:title  {:ru (string/trim (get sp 0)) :original (string/trim (get sp 1))}
+     :season (if (or season-f season-t) (if (nil? season-t) {:from (Integer/parseInt season-f) :to (Integer/parseInt season-f)} {:from (Integer/parseInt season-f) :to (Integer/parseInt season-t)}))
+     :series (if (or f t) (if (nil? t) {:from 1 :to (Integer/parseInt f)} {:from (Integer/parseInt f) :to (Integer/parseInt t)}))}))
+
+(defn decode-topic-tv-series [{topic :body page-title :title}]
+  (if-not (nil? topic)
+    (let [body (first (parser/query topic ".post_body"))
+          links (parser/query body ".postLink")
+          images (parser/query body "var.postImg")
+          magnet (first (parser/query topic ".magnet-link"))
+          size-el (first (parser/query topic ".attach_link.guest"))
+          kp-id (decode-kp-id body)
+          tv-series-details (decode-tv-series-info-from-title page-title)]
+      {:title     (:title tv-series-details)
+       :season    (:season tv-series-details)
+       :series    (:series tv-series-details)
+       :links     (map #(get-in % [:attrs :href]) links)
+       :images    (map #(get-in % [:attrs :title]) images)
+       :magnet    (get-in magnet [:attrs :href])
+       :translate (decode-translate (:text body))
+       :video     (decode-video (:text body))
+       :size      (decode-size (:text size-el))
+       :kp-id     kp-id})))

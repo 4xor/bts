@@ -5,6 +5,13 @@
   (if (str/blank? source) nil
       (let [ls (str/lower-case source)]
         (cond
+          (str/includes? ls "lostfilm") :lostfilm
+          (str/includes? ls "jaskier") :jaskier
+          (str/includes? ls "newstudio") :newstudio
+          (str/includes? ls "amedia") :amedia
+          (str/includes? ls "alexfilm") :alexfilm
+          (str/includes? ls "кураж-бамбей") :kuraj-bombey
+          (str/includes? ls "кубик в кубе") :k3
           (str/includes? ls "itunes") :itunes
           (str/includes? ls "профессиональный") :pro
           (str/includes? ls "дублированный") :pro
