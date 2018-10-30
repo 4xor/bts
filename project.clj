@@ -40,7 +40,6 @@
   :plugins [[lein-ring "0.12.4"]
             [lein-figwheel "0.5.16"]
             [lein-cljsbuild "1.1.7"]]
-  :java-source-paths ["src/java"]
 
   :ring {:handler bts.web/handler :auto-reload? true}
   :main ^:skip-aot bts.core
@@ -48,7 +47,9 @@
   :uberwar-name "bts.war"
 
   :source-paths ["src/clj"]
+  :java-source-paths ["src/java"]
   :resource-paths ["resources"]
+  :repl-options {:init-ns user}
   :profiles {:uberjar {:source-paths ["src/clj"]
                        :prep-tasks   ["clean"
                                       "compile"
