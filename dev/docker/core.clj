@@ -1,4 +1,4 @@
-(ns docker.build
+(ns docker.core
   (:require [clojure.string :as str]
             [clojure.java.shell :as shell])
   (:gen-class))

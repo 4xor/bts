@@ -99,4 +99,4 @@
              :nrepl-port   7888
              :nrepl-host   "localhost"
              :ring-handler bts.web/handler}
-  :aliases {"docker-publish" ["run" "-m" "docker.build" "4xor/bts" :project/version]})
+  :aliases {"docker-publish" ["run" "-m" "docker.core" "4xor/bts" :project/version]})
