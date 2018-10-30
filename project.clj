@@ -52,6 +52,7 @@
   :profiles {:uberjar {:source-paths ["src/clj"]
                        :prep-tasks   ["clean"
                                       "compile"
+                                      "javac"
                                       ["cljsbuild" "once" "min"]
                                       ["cljsbuild" "once" "admin-min"]]
                        :hooks        []
