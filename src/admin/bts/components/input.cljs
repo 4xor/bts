@@ -15,8 +15,9 @@
                                               (swap! model assoc-in [:_validate id] ret)
                                               (if ret (reset! cls []) (reset! cls [vc]))))))]
     (fn []
-      [:input {:class       (if (:_submitted @model) (string/join " " @cls) "")
-               :disabled    (if (satisfies? IAtom disabled) @disabled disabled)
-               :value       (get @model id)
-               :placeholder placeholder
-               :on-change   #(on-change (. % -target.value))}])))
+      (do (on-change (get @model id))
+          [:input {:class       (if (:_submitted @model) (string/join " " @cls) "")
+                   :disabled    (if (satisfies? IAtom disabled) @disabled disabled)
+                   :value       (get @model id)
+                   :placeholder placeholder
+                   :on-change   #(on-change (. % -target.value))}]))))
