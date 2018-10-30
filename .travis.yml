@@ -7,7 +7,7 @@ deploy:
   provider: script
   script: bash .travis/deploy.sh
   on:
-    all_branches: true
+    branch: master
 env:
   global:
     - secure: vp/xz+S6JfBvitYIN/NBuG+IjmDE5T+L71i2xBlCckFx0N1J36ZDgT4/SPHtgt0gakagF58deQ4I8A/u7jCUnX0je0ozEItSCYsJ34HkaLuUxXjrnC9G00FePqXeSpIUnC33n9Qm9RKeB+Lp/tANc/dzcfvfLgpJkPIXd5/43J4v2+LJw78fS8o5NTe8+q2N8D05wFll9WWX8XFX4YpgJ0hY+OX6ayrTmzvdxIQ6c0o2ciR5qU+4spwA2VyDqF7Dw0HXX/rxBK37uYDoQnmwQXaZV/5m8UCV6qDkpEZYPSvDqYipMolHW47JtEuTzQa9JkT/dmZc1NqOh3ScZkYt9pzjxxEbfIMbzyhl24dklM6nyezGaZ3aNHGswrXewYMgT/aWmB8u3ofaH3tIeihwwTrzma6hwARo7WrLA7pt8GHEh6ktFiOuonxXgD9EHeagar7ZuSd4HUr5jSO5v3fRyiVQ9imn34sLejuHXi9R3cCWvDANHovQvnjBF02AkqkfABAbwDbhzena/MTHnkPgf893Klj2efmpYee6M/Z6iyJaKYX/BEF0JR5BeemRum+diVLFJrd42JT0THFrOCMUZeGQLFEDDMB3wwJ4bbGjhkB7Gk/BZNa/hndQArNXDX466oHvoHpdatGErB8CDwQsh2sbMM+VluV0LeZTlGSrza8=
