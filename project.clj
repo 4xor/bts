@@ -19,6 +19,7 @@
                  [ch.qos.logback/logback-classic "1.2.3"]
 
                  [ring "1.7.0"]
+                 [ring-basic-authentication "1.0.5"]
                  [aleph "0.4.6"]
                  [ring/ring-defaults "0.3.2"]
                  [ring/ring-json "0.4.0"]
