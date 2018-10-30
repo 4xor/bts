@@ -90,7 +90,11 @@
 
 (defn- task-topic-parse-video [db id]
   (let [to-store (parse-video-topic id)]
-    (torrent-insert db to-store)))
+    (if-not (nil? (:magnet to-store))
+      (torrent-insert db to-store)
+      (register-failed-topic db {:source    "rutracker"
+                                 :source_id id
+                                 :error     "NOT_TORRENT"}))))
 
 (defn- task-topic-parse [db]
   (fn [_ {id :id torrent-type :type}]
