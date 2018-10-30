@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: bts-web
-          image: 4xor/bts:nightly
+          image: 4xor/bts:0.1.0
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
