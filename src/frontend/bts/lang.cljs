@@ -64,7 +64,7 @@
                      [:strong "BDRip / Blue-Ray / HD-DVD / HD_TV / HD / VHS / DVD / WEB-DL"] " - качество источника" [:br]
                      [:strong "imdb:5 / imdb:5.3 / kp:8 / kp:8.3"] " - фильтр по рейтингу" [:br]
                      [:strong "s1 / s12"] " - номер сезона для сериала" [:br]
-                     [:strong "x1 / x12"] " - номер серсии для сериала" [:br]
+                     [:strong "x1 / x12"] " - номер серии для сериала" [:br]
                      [:br]
                      [:strong "Перевод и озвучка:"] [:br]
                      [:strong "lostfilm"] " - " [:a {:href "https://www.lostfilm.tv/" :target "_blank"} "LostFilm"] [:br]
