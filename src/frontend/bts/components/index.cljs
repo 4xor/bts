@@ -7,13 +7,13 @@
             [cljs-http.client :as http]
             [bts.state :refer [state lang]]
             [bts.lang :refer [tr]]
-            [bts.router :as router]))
+            [bts.nav :as nav]))
 
 (defn on-search [q]
   (swap! state assoc :result {:loading true})
   (swap! state assoc :current-query q)
   (let [uri (str "/?q=" q "&sort-by=" (get @state :sort) "&sort-dir=" (get @state :sort-dir))]
-    (router/goto uri))
+    (nav/goto uri))
   (go (let [response (<! (http/get "/search" {:query-params {"q" q "sort-by" (get @state :sort) "sort-dir" (get @state :sort-dir)}}))
             body (:body response)]
         (swap! state assoc :result {:data (:data body) :total (:total body) :loaded (count (:data body))}))))
