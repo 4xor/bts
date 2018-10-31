@@ -34,8 +34,18 @@
         sc (str "select count(*) as c from torrent " where)]
     {:list (into [s] params) :count (into [sc] params)}))
 
-(defn search [db q skip]
-  (let [{sql :list count-sql :count} (-> q (parse-q) (sqlparams) (sqlparams->sql {:skip skip :limit 50 :order-by "seeders desc NULLS LAST,id asc"}))]
+(defn escape-sort [sort-by sort-dir]
+  (cond
+    (and (= sort-by "seed") (= sort-dir "asc")) "seeders asc NULLS LAST"
+    (and (= sort-by "seed") (= sort-dir "desc")) "seeders desc NULLS LAST"
+    (and (= sort-by "size") (= sort-dir "asc")) "size asc"
+    (and (= sort-by "size") (= sort-dir "desc")) "size desc"
+    (and (= sort-by "name") (= sort-dir "asc")) "name asc"
+    (and (= sort-by "size") (= sort-dir "desc")) "name desc"
+    :else "seeders desc NULLS LAST"))
+
+(defn search [db q skip sort-by sort-dir]
+  (let [{sql :list count-sql :count} (-> q (parse-q) (sqlparams) (sqlparams->sql {:skip skip :limit 50 :order-by (str (escape-sort sort-by sort-dir) ",id asc")}))]
     (try
       {:data (into [] (jdbc/query db sql)) :total (jdbc/query db count-sql {:row-fn :c :result-set-fn first})}
       (catch Exception ex (log/error ex "Search SQL exception: " sql) (throw ex)))))

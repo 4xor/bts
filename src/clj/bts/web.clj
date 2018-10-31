@@ -29,7 +29,7 @@
            (route/resources "/" {:root "public"})
            (GET "/" [] (-> (response/resource-response "index.html" {:root "public"})
                            (response/content-type "text/html")))
-           (GET "/search" [q skip] (response/response (cmp-search/search db q (try-as-int skip 0)))))
+           (GET "/search" [q skip sort-by sort-dir] (response/response (cmp-search/search db q (try-as-int skip 0) sort-by sort-dir))))
 
 (defroutes admin-routes
            (GET "/admin" [] (-> (response/resource-response "admin.html" {:root "public"})

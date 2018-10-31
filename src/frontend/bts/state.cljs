@@ -8,6 +8,8 @@
       :else :en)))
 
 (defonce state (r/atom {:q ""
+                        :sort "seed"
+                        :sort-dir "desc"
                         :result nil
                         :lang (try (detect-lang) (catch ExceptionInfo _ :en))
                         :help {:type :query}}))

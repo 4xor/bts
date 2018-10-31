@@ -9,7 +9,10 @@
              :title       "query"
              :loading     "searching..."
              :placeholder "title +1080p +kp:8 +pro-voice"
-             :load-more   "Load More"}
+             :load-more   "Load More"
+             :sort-seed   "seeders"
+             :sort-size   "size"
+             :sort-name   "name"}
     :help   {:title "Help Query"
              :n1    [:p [:strong "t1 +1080p"] " - search with title \"t1\" and with tag \"1080p\""]
              :n2    [:p [:strong "t1 t2 -1080p"] " - search with title \"t1\" and \"t2\" and without tag \"1080p\""]
@@ -45,7 +48,10 @@
              :title       "поиск"
              :loading     "загрузка..."
              :placeholder "название +1080p +kp:8 +pro-voice"
-             :load-more   "Показать Еще"}
+             :load-more   "Показать Еще"
+             :sort-seed   "сиды"
+             :sort-size   "размер"
+             :sort-name   "название"}
     :help   {:title "Помощь"
              :n1    [:p [:strong "t1 +1080p"] " - искать с заголовком \"t1\" и тегом \"1080p\""]
              :n2    [:p [:strong "t1 t2 -1080p"] " - искать с заголовком  \"t1\" и \"t2\" без тега \"1080p\""]
