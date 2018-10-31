@@ -18,9 +18,9 @@
   (let [m (filter #(not (nil? %)) parsed-q)]
     (r/reduce (fn [{sql :sql params :params} {t :t v :v d :d}]
                 (cond
-                  (= t :name) {:sql (conj sql (str (if (= d :rem) " NOT (" "(") " lower(name) like ?)"))
+                  (= t :name) {:sql    (conj sql (str (if (= d :rem) " NOT (" "(") " lower(name) like ?)"))
                                :params (conj params (str "%" (string/lower-case v) "%"))}
-                  (= t :tag) {:sql (conj sql (str (if (= d :rem) " NOT (" "(") " tags @> ARRAY[?::text])"))
+                  (= t :tag) {:sql    (conj sql (str (if (= d :rem) " NOT (" "(") " tags @> ARRAY[?::text])"))
                               :params (conj params (str v))}
                   :else {:sql sql :params params}
                   )
@@ -45,8 +45,21 @@
     :else "seeders desc NULLS LAST"))
 
 (defn search [db q skip sort-by sort-dir]
-  (let [{sql :list count-sql :count} (-> q (parse-q) (sqlparams) (sqlparams->sql {:skip skip :limit 50 :order-by (str (escape-sort sort-by sort-dir) ",id asc")}))]
-    (try
-      {:data (into [] (jdbc/query db sql)) :total (jdbc/query db count-sql {:row-fn :c :result-set-fn first})}
-      (catch Exception ex (log/error ex "Search SQL exception: " sql) (throw ex)))))
+  (let [now (System/currentTimeMillis)
+        {sql :list count-sql :count} (-> q
+                                         (parse-q)
+                                         (sqlparams)
+                                         (sqlparams->sql {:skip skip :limit 50 :order-by (str (escape-sort sort-by sort-dir) ",id asc")}))
+        ret (try
+              {:data (into [] (jdbc/query db sql)) :total (jdbc/query db count-sql {:row-fn :c :result-set-fn first})}
+              (catch Exception ex (log/error ex "Search SQL exception: " sql) (throw ex)))
+        duration (- (System/currentTimeMillis) now)]
+    (try (jdbc/insert! db :search_history {:duration       duration
+                                           :q              q
+                                           :skip           skip
+                                           :sort_field     sort-by
+                                           :sort_direction sort-dir
+                                           :result_count   (:total ret)})
+         (catch Exception ex (log/error ex "Can not store search statistics")))
+    ret))
 
