@@ -57,8 +57,8 @@
     (try (jdbc/insert! db :search_history {:duration       duration
                                            :q              q
                                            :skip           skip
-                                           :sort_field     sort-by
-                                           :sort_direction sort-dir
+                                           :sort_field     (or sort-by "none")
+                                           :sort_direction (or sort-dir "none")
                                            :result_count   (:total ret)})
          (catch Exception ex (log/error ex "Can not store search statistics")))
     ret))

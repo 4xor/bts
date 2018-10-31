@@ -1,25 +1,31 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: bts-worker
+  name: bts-admin
   labels:
-    app: bts-worker
+    app: bts-admin
 spec:
-  replicas: 3
   template:
     metadata:
       labels:
-        app: bts-worker
+        app: bts-admin
     spec:
       containers:
-        - name: bts-worker
+        - name: bts-admin
           image: 4xor/bts:0.1.2-SNAPSHOT
           imagePullPolicy: Always
+          ports:
+            - containerPort: 8081
+              hostPort: 8081
           env:
+            - name: HOST
+              value: 0.0.0.0
+            - name: PORT
+              value: "8081"
             - name: COUNT_TOPIC_WORKERS
-              value: "3"
+              value: "0"
             - name: ENABLE_SCHEDULER
-              value: "false"
+              value: "true"
             - name: RDS_DB_NAME
               value: "bts"
             - name: RDS_HOSTNAME
@@ -65,3 +71,18 @@ spec:
           secret:
             secretName: cloudsql-instance-credentials
       # [END volumes]
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "bts-admin-service"
+  namespace: "default"
+  labels:
+    app: "bts-admin"
+spec:
+  ports:
+    - protocol: "TCP"
+      port: 8081
+  selector:
+    app: "bts-admin"
+  type: "NodePort"

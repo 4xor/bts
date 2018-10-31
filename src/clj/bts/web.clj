@@ -2,6 +2,7 @@
   (:require [compojure.core :refer :all]
             [compojure.route :as route]
             [compojure.coercions :refer :all]
+            [ring.middleware.ssl :refer [wrap-ssl-redirect wrap-forwarded-scheme]]
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [ring.middleware.params :refer [wrap-params]]
@@ -63,4 +64,5 @@
                  (wrap-json-response {:keywords? true})
                  (wrap-json-params {:keywords? true})
                  (wrap-params (get-in site-defaults [:params :urlencoded] false))
+                 (wrap-forwarded-scheme)
                  (wrap-reload)))

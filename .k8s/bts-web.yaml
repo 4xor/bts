@@ -5,6 +5,7 @@ metadata:
   labels:
     app: bts-web
 spec:
+  replicas: 3
   template:
     metadata:
       labels:
@@ -12,7 +13,7 @@ spec:
     spec:
       containers:
         - name: bts-web
-          image: 4xor/bts:0.1.1
+          image: 4xor/bts:0.1.2-SNAPSHOT
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -23,7 +24,7 @@ spec:
             - name: COUNT_TOPIC_WORKERS
               value: "0"
             - name: ENABLE_SCHEDULER
-              value: "true"
+              value: "false"
             - name: RDS_DB_NAME
               value: "bts"
             - name: RDS_HOSTNAME
