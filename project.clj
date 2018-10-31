@@ -1,4 +1,4 @@
-(defproject bts "0.1.1-SNAPSHOT"
+(defproject bts "0.1.1"
   :description "BitTorrent parse and search with tags and metadata"
   :url "http://bts.4xor.io"
   :license {:name "Eclipse Public License"
