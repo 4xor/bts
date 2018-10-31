@@ -41,7 +41,7 @@
                      [:strong "two-voice"] " - Two voice" [:br]
                      [:strong "one-voice"] " - One voice" [:br]
                      [:strong "author-voice"] " - Author's translation" [:br]
-                     [:strong "user-voice"] " - Amateur translatio" [:br]
+                     [:strong "user-voice"] " - Amateur translation" [:br]
                      [:strong "sub"] " - Subtitles only"]}}
    :ru
    {:search {:button      "найти"
@@ -80,7 +80,7 @@
                      [:strong "two-voice"] " - Двуголосый" [:br]
                      [:strong "one-voice"] " - Одноголосый" [:br]
                      [:strong "author-voice"] " - Авторский перевод" [:br]
-                     [:strong "user-voice"] " - Люьмтельский перевод" [:br]
+                     [:strong "user-voice"] " - Любительский перевод" [:br]
                      [:strong "sub"] " - Только субтитры"]}}})
 
 (def tr (partial tempura/tr {:dict dictionary}))
