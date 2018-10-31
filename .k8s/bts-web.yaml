@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: bts-web
-          image: 4xor/bts:0.1.2-SNAPSHOT
+          image: 4xor/bts:nightly
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -85,18 +85,3 @@ spec:
   selector:
     app: "bts-web"
   type: "NodePort"
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: main-ingress
-  annotations:
-    kubernetes.io/ingress.global-static-ip-name: "web-static-ip"
-spec:
-  backend:
-    serviceName: bts-web-service
-    servicePort: 8080
-  tls:
-  - secretName: bts-dot-4xor-dot-tls
-    hosts:
-    - bts.4xor.io

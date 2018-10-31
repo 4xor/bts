@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: bts-admin
-          image: 4xor/bts:0.1.2-SNAPSHOT
+          image: 4xor/bts:nightly
           imagePullPolicy: Always
           ports:
             - containerPort: 8081

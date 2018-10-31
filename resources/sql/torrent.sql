@@ -12,8 +12,8 @@ ON CONFLICT (source, source_id)
 DO UPDATE
   SET
     tags = :tags,
-    name = :name
-    magnet = :magnet
+    name = :name,
+    magnet = :magnet,
     size = :size
 RETURNING *;
 
