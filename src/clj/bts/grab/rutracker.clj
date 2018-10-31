@@ -4,7 +4,7 @@
             [cheshire.core :refer [parse-string]]
             [clj-http.client :as client]))
 
-(defn- extract-title [body page-title]
+(defn extract-title [page-title]
   (let [[_ r] (re-find #"([^\(]+)(?:\s\(|::)" page-title)] r))
 
 (defn- decode-title [title]
@@ -15,7 +15,7 @@
       :else {:original (string/trim title)})))
 
 (defn- decode-translate [body]
-  (last (re-find #"Перевод[^:]*:\s*([^:]*)\s[^:]*:" body)))
+  (last (re-find #"Перевод\s*:\s*([^:]*)\s[^:]*:" body)))
 
 (defn- decode-video [body]
   (let [[_ w0 h0 whq] (re-find #"Видео:.*\s(?:(\d{4}|\d{3}|\d{2})x(\d{4}|\d{3}|d{2})|(\d{4}p))(?:\s|,)" body)
@@ -81,7 +81,7 @@
           magnet (first (parser/query topic ".magnet-link"))
           size-el (first (parser/query topic ".attach_link.guest"))
           kp-id (decode-kp-id body)]
-      {:title     (decode-title (extract-title topic page-title))
+      {:title     (decode-title (extract-title page-title))
        :links     (map #(get-in % [:attrs :href]) links)
        :images    (map #(get-in % [:attrs :title]) images)
        :magnet    (get-in magnet [:attrs :href])
@@ -90,11 +90,24 @@
        :size      (decode-size (:text size-el))
        :kp-id     kp-id})))
 
-(defn- decode-tv-series-info-from-title [page-title]
-  (let [sp (string/split page-title #"/")
+(defn detect-separator [title]
+  (let [bysl (string/split title #"/")
+        byL (string/split title #"\|")]
+    (cond
+      (> (count bysl) (count byL)) bysl
+      :else byL)))
+
+(defn decode-tv-series-info-from-title [page-title]
+  (let [sp (detect-separator page-title)
         [_ season-f season-t] (re-find #"сезон[^\d]*(?::)?\s*(\d+)(?:-(\d+))?" (string/lower-case page-title))
-        [_ f t] (re-find #"(?:сери|эпизод)[^\d]*(?::)?\s*(\d+)(?:-(\d+))?" (string/lower-case page-title))]
-    {:title  {:ru (string/trim (get sp 0)) :original (string/trim (get sp 1))}
+        [_ f t] (re-find #"(?:сери|эпизод)[^\d]*(?::)?\s*(\d+)(?:-(\d+))?" (string/lower-case page-title))
+        sp1 (string/lower-case (get sp 1))
+        title (if (or (string/includes? sp1 "сезон")
+                      (string/includes? sp1 "сери")
+                      (string/includes? sp1 "эпизод"))
+                {:original (string/trim (get sp 0))}
+                {:ru (string/trim (get sp 0)) :original (string/trim (get sp 1))})]
+    {:title  title
      :season (if (or season-f season-t) (if (nil? season-t) {:from (Integer/parseInt season-f) :to (Integer/parseInt season-f)} {:from (Integer/parseInt season-f) :to (Integer/parseInt season-t)}))
      :series (if (or f t) (if (nil? t) {:from 1 :to (Integer/parseInt f)} {:from (Integer/parseInt f) :to (Integer/parseInt t)}))}))
 

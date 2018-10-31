@@ -123,7 +123,9 @@
            [:strong "cleanup"]
            "- clean system temp data" [:br]
            [:strong "torrent-seed-leach-update"]
-           "- update torrent seeder/leeder information"]
+           "- update torrent seeder/leeder information" [:br]
+           [:strong "torrent-update"]
+           "- update torrent info"]
           [input {:placeholder "rutracker-forum-parse-film"
                   :model       model
                   :id          :action-name
@@ -199,7 +201,9 @@
            [:strong "cleanup"]
            "- clean system temp data" [:br]
            [:strong "torrent-seed-leach-update"]
-           "- update torrent seeder/leeder information"]
+           "- update torrent seeder/leeder information" [:br]
+           [:strong "torrent-update"]
+           "- update torrent info"]
           [input {:placeholder "rutracker-forum-parse-film"
                   :model       model
                   :id          :action-name

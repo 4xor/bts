@@ -4,13 +4,18 @@ select (exists(select 1 from torrent where source = :source and source_id = :sou
         exists(select 1 from topic_failed where source = :source and source_id = :source_id)) as r
 
 
--- :name torrent-insert :! :n
+-- :name torrent-insert :! :*
 -- :doc Insert torrent info
 insert into torrent(torrent_type, source, source_id, magnet, size, name, tags)
 values (:torrent_type, :source, :source_id, :magnet, :size, :name, :tags)
 ON CONFLICT (source, source_id)
-DO UPDATE SET
-tags = :tags;
+DO UPDATE
+  SET
+    tags = :tags,
+    name = :name
+    magnet = :magnet
+    size = :size
+RETURNING *;
 
 -- :name update-seed-leech-info :! :n
 -- :doc Update seeders and leechers info of torrent
@@ -36,3 +41,13 @@ where
 -- :name register-failed-topic :! :n
 insert into topic_failed(source, source_id, error_message)
 values(:source, :source_id, :error)
+
+-- :name get-torrents-for-update :? :*
+update torrent
+set update_at = now()
+where id in (
+  select id from torrent
+  where update_at <= NOW() - INTERVAL '30 minutes'
+  limit 1000
+)
+returning id, source, source_id, torrent_type;
