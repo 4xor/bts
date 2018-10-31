@@ -4,7 +4,6 @@
   padding 8px
 
 .search
-  max-width: 1000px
 
   & .q
     margin-left 10px
@@ -20,7 +19,6 @@
 
 .search-result
   margin-top 20px
-  max-width 1000px
   width 100%
   a
     text-decoration none
@@ -65,3 +63,24 @@
     float right
     font-size 10px
     color silver
+
+.content
+  display flex
+.aside
+  flex 1 1 auto
+  max-width 1000px
+.right-aside
+  padding-left 30px
+  flex 0 0 auto
+  @media screen and (max-width: 1300px)
+    display none
+
+.help
+  &__title
+    height 38px
+    font-weight 300
+  p
+    margin-top 0
+    margin-bottom 5px
+    line-height 15px
+    font-size 70%

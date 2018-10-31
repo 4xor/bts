@@ -5,7 +5,8 @@
             [clojure.string :as string]
             [cljs.core.async :refer [<! timeout]]
             [cljs-http.client :as http]
-            [bts.state :refer [state]]))
+            [bts.state :refer [state lang]]
+            [bts.lang :refer [tr]]))
 
 (defn on-search [q]
   (swap! state assoc :result {:loading true})
@@ -16,7 +17,7 @@
 
 (defn on-load-more []
   (swap! state assoc-in [:result :loading] true)
-  (go (let [response (<! (http/get "/search" {:query-params {"q" (:current-query @state)
+  (go (let [response (<! (http/get "/search" {:query-params {"q"    (:current-query @state)
                                                              "skip" (get-in @state [:result :loaded])}}))
             body (:body response)]
         (swap! state assoc-in [:result :loading] false)
@@ -36,9 +37,17 @@
 (defn search [q]
   [:form.search {:on-submit (fn [e] (.preventDefault e) (on-search @q))}
    [:div.field-set
-    [:label "query"]
-    [:input.q {:name "q" :type "text" :value @q :on-change #(reset! q (. % -target.value)) :auto-complete "off" :placeholder "title +1080p +kp:8 +pro-voice"}]
-    [:button.primary {:type "submit"} [:i.icon.icon-search] "search"]]])
+    [:label (tr [(lang) :en] [:search/title])]
+    [:input.q {:name          "q"
+               :type          "text"
+               :value         @q
+               :on-change     #(reset! q (. % -target.value))
+               :auto-complete "off"
+               :placeholder   (tr [(lang) :en] [:search/placeholder])
+               :on-focus      #(swap! state assoc-in [:help :type] :query)
+               :on-click      #(swap! state assoc-in [:help :type] :query)
+               :on-blur      #(swap! state assoc-in [:help :type] :none)}]
+    [:button.primary {:type "submit"} [:i.icon.icon-search] (tr [(lang) :en] [:search/button])]]])
 
 (defn tag-value [tag]
   (let [s (string/split tag ":")]
@@ -52,8 +61,8 @@
                                       (string/starts-with? e "imdb:")
                                       (re-matches #"s\d+" e)
                                       (re-matches #"x\d+" e)))) tags)]
-    {:all tags
-     :kp {:id (tag-value kpid) :value kp}
+    {:all  tags
+     :kp   {:id (tag-value kpid) :value kp}
      :view view}))
 
 (defn search-item [item]
@@ -72,15 +81,35 @@
    (for [item (:data @items)]
      (search-item item))
    (if (:loading @items)
-     [:div.loading [:i.icon-spin4.animate-spin] "searching..."])
+     [:div.loading [:i.icon-spin4.animate-spin] (tr [(lang) :en] [:search/loading])])
    (when-not (nil? (:data @items))
      [:div.search-footer
       (when-not (= (:loaded @items) (:total @items))
-        [:button.standard.load-more {:on-click #(on-load-more)} "Load More"])
+        [:button.standard.load-more {:on-click #(on-load-more)} (tr [(lang) :en] [:search/load-more])])
       [:div.load-count (:loaded @items) "/" (:total @items)]])])
+
+(defn help-query []
+  [:div.help
+   [:h2.help__title (tr [(lang) :en] [:help/title])]
+   (tr [(lang) :en] [:help/n1])
+   (tr [(lang) :en] [:help/n2])
+   (tr [(lang) :en] [:help/n3])
+   (tr [(lang) :en] [:help/n4])
+   (tr [(lang) :en] [:help/body])])
+
+(defn help-torrent [item]
+  [:div])
 
 (defn component []
   [:div
-   [:h1 "[BTS] Torrent Search"]
-   [search (r/cursor state [:q])]
-   [search-result (r/cursor state [:result])]])
+   [:div.content
+    [:div.aside
+     [:h1 "[BTS] Torrent Search"]
+     [search (r/cursor state [:q])]
+     [search-result (r/cursor state [:result])]]
+    [:div.right-aside
+     [:div.info
+      (if (= (get-in @state [:help :type]) :query)
+        [help-query]
+        [help-torrent (r/cursor state [:help :value])])
+      ]]]])

@@ -49,14 +49,14 @@
 
 (defn- tag-video-size [{{w :width h :height} :video} acc]
   (if-not (or (nil? w) (nil? h) (= w 0) (= h 0))
-    (conj acc (str w "x" h)
-          (cond
-            (and (>= w 7600) (>= h 4000)) "4320p"
-            (and (>= w 3900) (>= h 2000)) "2160p"
-            (>= w 1900) "1080p"
-            (>= w 1200) "720p"
-            (>= w 700) "576p"
-            :else "480p"))
+    (concat (conj acc (str w "x" h))
+            (cond
+              (and (>= w 7000) (>= h 4000)) ["4320p" "8k"]
+              (and (>= w 3500) (>= h 2000)) ["2160p" "4k"]
+              (>= w 1900) ["1080p"]
+              (>= w 1200) ["720p"]
+              (>= w 700) ["576p"]
+              :else ["480p"]))
     acc))
 
 (defn- tag-kp [{id :kp-id} acc]

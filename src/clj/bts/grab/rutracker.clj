@@ -18,7 +18,12 @@
   (last (re-find #"Перевод[^:]*:\s*([^:]*)\s[^:]*:" body)))
 
 (defn- decode-video [body]
-  (let [[_ w h] (re-find #"Видео:.*\s(\d{4}|\d{3}|\d{2})x(\d{4}|\d{3}|d{2})\s" body)
+  (let [[_ w0 h0 whq] (re-find #"Видео:.*\s(?:(\d{4}|\d{3}|\d{2})x(\d{4}|\d{3}|d{2})|(\d{4}p))(?:\s|,)" body)
+        [w h] (cond
+                (= whq "4320p") ["7680" "4320"]
+                (= whq "2160p") ["3840" "2160"]
+                (= whq "1080p") ["1920" "1080"]
+                :else [w0 h0])
         [_ q] (re-find #"(?:Качество|Тип релиза)[^:]*:\s*([^\s]*)\s" body)]
     (if (and (nil? q) (nil? w) (nil? h))
       nil
